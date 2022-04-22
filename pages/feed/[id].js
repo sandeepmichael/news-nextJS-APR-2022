@@ -2,6 +2,8 @@ import Layout from "../../components/layout"
 import NewsDisplay from '../../components/NewsDisplay'
 import styles from '../../styles/pagination.module.css'
 import { useRouter } from 'next/router'
+import axios from 'axios'
+
 
 export default function FeedPage({articles, pageNumber}) {
  
@@ -52,19 +54,18 @@ export const getServerSideProps = async PageContext => {
         }
     }
 
-    const response = await fetch(`https://newsapi.org/v2/top-headlines?country=in&pageSize=6&page=${pageNumber}`,{
+    const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=in&pageSize=6&page=${pageNumber}`,{
         headers : {
             Authorization : `Bearer ${process.env.NEXT_PUBLIC_NEWS_KEY}`,
         }
     })
-    const apiJSON = await response.json()
-    const {articles} = apiJSON;
+    const {articles} = response.data;
     return {
         props: {
-            articles,
+       articles,
             pageNumber: Number.parseInt(pageNumber)
         }
-    }
+   }
      
 }
  
